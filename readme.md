@@ -64,7 +64,9 @@ The backend will run on `http://localhost:8080`.
 {
   "firstName": "John",
   "lastName": "Doe",
-  "email": "john.doe@example.com"
+  "username": "johndoe",
+  "email": "john.doe@example.com",
+  "password": "password"
 }
 ```
 
@@ -75,6 +77,12 @@ src/main/java/com/example/student
 ├── StudentCrudApplication.java
 ├── controller
 │   └── StudentController.java
+├── dtos
+│   └── CreateStudentRequest.java
+│   └── CreateStudentResponse.java
+│   └── StudentResponse.java
+│   └── UpdateStudentRequest.java
+│   └── UpdateStudentResponse.java
 ├── entity
 │   └── Student.java
 ├── repository
