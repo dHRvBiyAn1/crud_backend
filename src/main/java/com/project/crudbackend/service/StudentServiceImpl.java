@@ -6,6 +6,9 @@ import com.project.crudbackend.dtos.UpdateStudentRequest;
 import com.project.crudbackend.dtos.UpdateStudentResponse;
 import com.project.crudbackend.dtos.StudentResponse;
 import com.project.crudbackend.entity.Student;
+import com.project.crudbackend.exception.EmailAlreadyExistsException;
+import com.project.crudbackend.exception.StudentNotFoundException;
+import com.project.crudbackend.exception.UsernameAlreadyExistsException;
 import com.project.crudbackend.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,15 +40,18 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student getStudentById(Long id) {
-
         return studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student with ID " + id + " not found"));
+                .orElseThrow(() -> new StudentNotFoundException("Student with ID " + id + " not found"));
     }
 
     @Override
     public CreateStudentResponse createStudent(CreateStudentRequest request) {
         if (studentRepository.findByUsername(request.getUsername()).isPresent()) {
-            throw new RuntimeException("Username already exists");
+            throw new UsernameAlreadyExistsException("Username already exists");
+        }
+
+        if (studentRepository.findByEmail(request.getUsername()).isPresent()) {
+            throw new EmailAlreadyExistsException("Email already exists");
         }
 
         Student student = Student.builder()
@@ -69,7 +75,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public UpdateStudentResponse updateStudent(Long id, UpdateStudentRequest request) {
         Student existingStudent = studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student with ID " + id + " not found"));
+                .orElseThrow(() -> new StudentNotFoundException("Student with ID " + id + " not found"));
 
         existingStudent.setFirstName(request.getFirstName());
         existingStudent.setLastName(request.getLastName());
@@ -91,7 +97,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void deleteStudent(Long id) {
         if (!studentRepository.existsById(id)) {
-            throw new RuntimeException("Student with ID " + id + " not found");
+            throw new StudentNotFoundException("Student with ID " + id + " not found");
         }
         studentRepository.deleteById(id);
     }
