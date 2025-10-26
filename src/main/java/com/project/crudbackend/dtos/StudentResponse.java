@@ -10,6 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class StudentResponse {
+    private Long id;
     private String firstName;
     private String lastName;
     private String email;

@@ -11,6 +11,7 @@ import com.project.crudbackend.exception.StudentNotFoundException;
 import com.project.crudbackend.exception.UsernameAlreadyExistsException;
 import com.project.crudbackend.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,11 +24,13 @@ import java.util.stream.Collectors;
 public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public List<StudentResponse> getAllStudents() {
         return studentRepository.findAll().stream()
                 .map(student -> StudentResponse.builder()
+                        .id(student.getId())
                         .firstName(student.getFirstName())
                         .lastName(student.getLastName())
                         .username(student.getUsername())
@@ -59,7 +62,7 @@ public class StudentServiceImpl implements StudentService {
                 .lastName(request.getLastName())
                 .username(request.getUsername())
                 .email(request.getEmail())
-                .password(request.getPassword())
+                .password(bCryptPasswordEncoder.encode(request.getPassword()))
                 .build();
 
         Student savedStudent = studentRepository.save(student);

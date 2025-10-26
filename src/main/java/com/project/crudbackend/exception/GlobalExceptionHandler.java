@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -59,6 +60,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(StudentNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleStudentNotfound(StudentNotFoundException e, HttpServletRequest request) {
         logger.warn("Student not found at {}: {}", request.getRequestURI(), e.getMessage());
+        return buildErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e, HttpServletRequest request) {
+        logger.warn("Method Argument type mismatch at {}: {}", request.getRequestURI(), e.getMessage());
         return buildErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST, request);
     }
 
