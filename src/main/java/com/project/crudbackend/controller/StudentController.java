@@ -1,5 +1,6 @@
 package com.project.crudbackend.controller;
 
+import com.project.crudbackend.dtos.*;
 import com.project.crudbackend.entity.Student;
 import com.project.crudbackend.service.StudentService;
 import jakarta.validation.Valid;
@@ -11,13 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("student")
 @RequiredArgsConstructor
 public class StudentController {
     private final StudentService studentService;
 
     @GetMapping
-    public ResponseEntity<List<Student>> getAllStudents() {
+    public ResponseEntity<List<StudentResponse>> getAllStudents() {
         return new ResponseEntity<>(studentService.getAllStudents(), HttpStatus.OK);
     }
 
@@ -27,13 +29,13 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<Student> createStudent(@Valid @RequestBody Student student){
-        return new ResponseEntity<>(studentService.createStudent(student), HttpStatus.CREATED);
+    public ResponseEntity<CreateStudentResponse> createStudent(@Valid @RequestBody CreateStudentRequest request){
+        return new ResponseEntity<>(studentService.createStudent(request), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Student> updateStudent(@Valid @PathVariable Long id, @RequestBody Student student){
-        return new ResponseEntity<>(studentService.updateStudent(id, student), HttpStatus.OK);
+    public ResponseEntity<UpdateStudentResponse> updateStudent(@Valid @PathVariable Long id, @RequestBody UpdateStudentRequest request){
+        return new ResponseEntity<>(studentService.updateStudent(id, request), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

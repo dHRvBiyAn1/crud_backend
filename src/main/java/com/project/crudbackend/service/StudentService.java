@@ -1,5 +1,6 @@
 package com.project.crudbackend.service;
 
+import com.project.crudbackend.dtos.*;
 import com.project.crudbackend.entity.Student;
 import jakarta.validation.Valid;
 
@@ -7,13 +8,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface StudentService {
-    List<Student> getAllStudents();
+    List<StudentResponse> getAllStudents();
 
     Student getStudentById(Long id) throws RuntimeException;
 
-    Student createStudent(@Valid Student student);
+    CreateStudentResponse createStudent(@Valid CreateStudentRequest request);
 
-    Student updateStudent(@Valid Long id, Student student);
+    UpdateStudentResponse updateStudent(@Valid Long id, UpdateStudentRequest request);
 
     void deleteStudent(@Valid Long id);
 }
